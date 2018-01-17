@@ -18,8 +18,8 @@
 /* see <http://www.gnu.org/licenses/>.                                  */
 /************************************************************************/
 
-// Date: 20171208
-// Version: 0.1
+// Date: 20180117
+// Version: 0.2
 
 #ifndef SPARSEMATRIXST_H_
 #define SPARSEMATRIXST_H_
@@ -138,7 +138,7 @@ public:
 
   // Get a vector with all the elements of a column
   vector<T> column(const IT col) const {
-    vector<T> res(_m, T());
+    vector<T> res(_n, T());
 
     IT index = 0;
     IT nnz = rowptr[_n];
@@ -159,7 +159,7 @@ public:
   // Get a vector of position/value pairs
   // with all the non Zero elements of a column
   vector<pair<IT,T>> columnCr(const IT col) const {
-    vector<pair<IT,T>> res(_m);
+    vector<pair<IT,T>> res(_n);
     IT n = 0;
     IT index = 0;
     IT nnz = rowptr[_n];
@@ -249,7 +249,7 @@ public:
     }
   }
 
-  //Compute transpose of the current Matrix
+  //Compute the transpose of the current Matrix
   SparseMatrixST<T> transpose() const {
     SparseMatrixST<T> r(_m, _n);
     IT nnz = rowptr[_n];
@@ -329,7 +329,7 @@ public:
     return multiply(m);
   }
 
-  // Compare two matrices
+  // Compare two matrices, true if they are equal
   friend bool operator==(const SparseMatrixST& l, const SparseMatrixST& r) {
     // Check sizes
     if(l._n != r._n)
@@ -345,10 +345,11 @@ public:
     if(l.rowptr != r.rowptr)
       return false;
 
+    // All is equal
     return true;
   }
 
-  // Compare two matrices
+  // Compare two matrices, true if they are different
   friend bool operator!=(const SparseMatrixST& l, const SparseMatrixST& r) {
     return !(l == r);
   }
@@ -631,7 +632,6 @@ private:
     }
   }
 
-  // Calculte the RowPtr values
   void multiplyPhaseTwo(const SparseMatrixST<T> &m, SparseMatrixST<T> &r) const {
     IT ncol = r._m;
     IT nrow = r._n;
